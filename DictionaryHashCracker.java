@@ -2,11 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Stratégie de cassage par dictionnaire.
- * Parcourt une liste de mots, calcule leur hash MD5 et le compare
- * au hash recherché.
- */
 public class DictionaryHashCracker implements HashCracker {
 
     private String dictionaryPath;
