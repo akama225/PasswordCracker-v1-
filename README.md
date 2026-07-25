@@ -118,3 +118,96 @@ ou
 
 Password not found
 
+## 6. Résultats obtenus
+
+L'application a été testée avec succès sur les deux stratégies de cassage, ainsi que
+sur plusieurs cas d'erreur (méthode invalide, hash mal formé, mot de passe introuvable).
+
+![Résultats des tests en ligne de commande](test-results.png)
+
+**Vidéo de démonstration** : *(lien à insérer ici une fois la vidéo enregistrée)*
+
+| Méthode | Hash testé | Mot recherché | Résultat | Temps d'exécution | Tentatives |
+|---------|-----------|----------------|----------|--------------------|------------|
+| BRUTE   | `098f6bcd4621d373cade4e832627b4f6` | `test` | Password found: test | 2457 ms | 355 414 |
+| DICO    | `5ebe2294ecd0e0f08eab7690d2a6ee69` | `secret` | Password found: secret | 83 ms | — |
+| BRUTE   | `00000000000000000000000000000000` | *(inexistant)* | Password not found | 3135 ms | 475 254 |
+
+**Tests de robustesse (gestion des erreurs)** :
+
+| Commande | Résultat attendu | Résultat obtenu |
+|----------|-------------------|-------------------|
+| `-m XYZ -h ...` | Méthode inconnue rejetée | `Erreur : Méthode inconnue: XYZ`  |
+| `-m DICO -h abc` | Hash mal formé rejeté | `Erreur : le hash fourni est invalide...`  |
+
+**Observation** : la stratégie `DICO` est nettement plus rapide (83 ms) que `BRUTE`
+(2457 à 3135 ms) sur ces exemples, ce qui illustre concrètement le compromis entre les
+deux approches : le dictionnaire est rapide mais limité aux mots qu'il contient, tandis
+que la force brute est exhaustive mais coûteuse en temps, même sur un alphabet réduit
+(a-z) et une longueur maximale de seulement 4 caractères.
+
+## 7. Difficultés rencontrées
+
+- **Performance de la force brute** : même limitée à 4 caractères et à l'alphabet
+  `a-z`, l'attaque par force brute nécessite plusieurs centaines de milliers de
+  tentatives (jusqu'à ~475 000 dans nos tests) et prend déjà plusieurs secondes.
+  Cela illustre concrètement pourquoi les attaques par force brute deviennent
+  rapidement impraticables dès que la longueur ou l'alphabet augmentent.
+- **Coordination du travail en parallèle** : les stratégies (`DictionaryHashCracker`,
+  `BruteForceHashCracker`) et la fabrique ont été développées simultanément par
+  différents membres de l'équipe. Fixer l'interface `HashCracker` avant de commencer
+  le développement a été essentiel pour éviter les incompatibilités lors de la fusion.
+- **Coordination Git** : plusieurs commits parallèles sur des sujets proches
+  (README, diagramme UML, classes concrètes) ont nécessité une vigilance particulière
+  pour éviter les conflits de fusion, notamment autour de la pull request ouverte
+  pendant le développement.
+- **Constructeur de `DictionaryHashCracker`** : cette classe nécessite un chemin de
+  dictionnaire en paramètre de constructeur, ce qui a demandé une clarification sur la
+  manière dont `HashCrackerFactory` devait fournir cette information (chemin par
+  défaut codé en dur dans la fabrique).
+
+## 8. Conclusion
+
+Ce mini-projet a permis de mettre en pratique le patron de création **Simple Factory**
+dans un contexte concret : centraliser la création de deux stratégies de cassage de
+mot de passe interchangeables derrière une interface commune. L'exercice a illustré
+clairement l'intérêt du **polymorphisme** : le programme principal (`Main`) manipule
+uniquement le type `HashCracker`, sans jamais connaître les classes concrètes
+utilisées, ce qui rend l'architecture modulaire et facile à faire évoluer.
+
+Cette première version a toutefois révélé une limite structurelle de la fabrique
+simple : toute nouvelle stratégie de cassage nécessite de modifier directement le
+code de `HashCrackerFactory`, ce qui viole le principe Open/Closed. Cette limitation,
+volontairement laissée en l'état dans ce mini-projet, sera corrigée dans la version
+suivante à l'aide d'un patron de création plus flexible.
+
+## Questions de réflexion
+
+**1. Quels avantages apporte la fabrique simple ?**
+Elle centralise la logique de création des objets en un seul endroit, ce qui
+simplifie le code appelant (`Main`) : celui-ci n'a plus besoin de connaître les
+classes concrètes, seulement l'interface commune. Cela réduit le couplage entre le
+programme principal et les implémentations, et facilite la maintenance.
+
+**2. Quels sont ses inconvénients ?**
+La fabrique doit être modifiée à chaque ajout d'une nouvelle stratégie de cassage,
+ce qui viole le principe Open/Closed (ouverte à l'extension, fermée à la
+modification). De plus, la logique de sélection dans `create()` (un `switch` sur une
+chaîne de caractères) peut devenir difficile à maintenir si le nombre de méthodes
+augmente significativement, et toute erreur de frappe dans le paramètre `method`
+n'est détectée qu'à l'exécution, pas à la compilation.
+
+**3. Que faut-il modifier lorsqu'une nouvelle stratégie est ajoutée ?**
+Il faut : (1) créer une nouvelle classe implémentant `HashCracker` (par exemple
+`RainbowTableHashCracker`), puis (2) modifier le corps de
+`HashCrackerFactory.create()` pour y ajouter un nouveau `case` correspondant à cette
+stratégie. Cette seconde étape est justement le point faible identifié en question 2.
+
+**4. La fabrique respecte-t-elle le principe Open/Closed ?**
+Non. Le principe Open/Closed stipule qu'une classe devrait être ouverte à
+l'extension mais fermée à la modification. Or, ajouter une nouvelle stratégie de
+cassage oblige à modifier directement le code source de `HashCrackerFactory`
+(ajout d'un `case` dans le `switch`), plutôt que d'étendre son comportement sans
+toucher à l'existant. Cette limitation est assumée dans cette première version du
+projet et sera corrigée dans le mini-projet suivant, probablement à l'aide d'un
+patron de création plus flexible (Factory Method ou Abstract Factory).
