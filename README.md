@@ -85,7 +85,7 @@ sans savoir quelle implémentation s'exécute réellement derrière l'interface.
 
 ## 4. Diagramme UML
 
-![Diagramme de classes UML](uml-diagram.png)
+![Diagramme de classes UML](uml-diagramH.png)
 
 ## 5. Usage du patron Simple Factory
 
