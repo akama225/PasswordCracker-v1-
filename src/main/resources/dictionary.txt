@@ -1,0 +1,6 @@
+bonjour
+secret
+admin
+password
+azerty
+test
