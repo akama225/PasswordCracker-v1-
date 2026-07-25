@@ -1,5 +1,3 @@
-package com.passwordcracker;
-
 /**
  * Interface commune à toutes les stratégies de cassage de hash.
  */
