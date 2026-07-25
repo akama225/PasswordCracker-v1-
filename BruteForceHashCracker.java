@@ -1,8 +1,3 @@
-/**
- * Stratégie de cassage de hash par force brute.
- * Génère toutes les combinaisons possibles (a-z, longueur 1 à 4)
- * et compare leur hash MD5 au hash recherché.
- */
 public class BruteForceHashCracker implements HashCracker {
 
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
