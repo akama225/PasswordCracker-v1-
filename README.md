@@ -110,4 +110,11 @@ passwordCracker -m BRUTE -h e7247759c1633c0f9f1485f3690294a9
 passwordCracker -m DICO -h e7247759c1633c0f9f1485f3690294a9
 ```
 
+Résultat attendu :
+
+Password found: test
+
+ou
+
+Password not found
 
