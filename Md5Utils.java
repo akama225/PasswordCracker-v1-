@@ -2,11 +2,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Classe utilitaire pour le calcul de hash MD5.
- * Partagée entre DictionaryHashCracker et BruteForceHashCracker
- * pour éviter toute duplication de code.
- */
 public class Md5Utils {
 
     public static String hash(String input) {
