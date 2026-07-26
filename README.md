@@ -123,7 +123,7 @@ Password not found
 L'application a été testée avec succès sur les deux stratégies de cassage, ainsi que
 sur plusieurs cas d'erreur (méthode invalide, hash mal formé, mot de passe introuvable).
 
-![Résultats des tests en ligne de commande](test-results.png)
+![Résultats des tests en ligne de commande](test.jpeg)
 
 **Vidéo de démonstration** : https://drive.google.com/file/d/1UJiRQV8gBH2MXXbdsMwEafwpUt1rlp5u/view?usp=drive_link
 
