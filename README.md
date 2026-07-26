@@ -129,22 +129,26 @@ sur plusieurs cas d'erreur (méthode invalide, hash mal formé, mot de passe int
 
 | Méthode | Hash testé | Mot recherché | Résultat | Temps d'exécution | Tentatives |
 |---------|-----------|----------------|----------|--------------------|------------|
-| BRUTE   | `098f6bcd4621d373cade4e832627b4f6` | `test` | Password found: test | 2457 ms | 355 414 |
+| DICO    | `e7247759c1633c0f9f1485f3690294a9` | *(absent du dictionnaire)* | Password not found | 36 ms | — |
+| DICO    | `5f4dcc3b5aa765d61d8327deb882cf99` | `password` | Password found: password | 40 ms | — |
 | DICO    | `5ebe2294ecd0e0f08eab7690d2a6ee69` | `secret` | Password found: secret | 83 ms | — |
+| BRUTE   | `098f6bcd4621d373cade4e832627b4f6` | `test` | Password found: test | 2204 ms | 355 414 |
 | BRUTE   | `00000000000000000000000000000000` | *(inexistant)* | Password not found | 3135 ms | 475 254 |
 
 **Tests de robustesse (gestion des erreurs)** :
 
 | Commande | Résultat attendu | Résultat obtenu |
 |----------|-------------------|-------------------|
-| `-m XYZ -h ...` | Méthode inconnue rejetée | `Erreur : Méthode inconnue: XYZ`  |
-| `-m DICO -h abc` | Hash mal formé rejeté | `Erreur : le hash fourni est invalide...`  |
+| `-m FOO -h ...` | Méthode inconnue rejetée | `Erreur : Méthode inconnue: FOO`  |
+| `-m DICO -h hashinvalide` | Hash mal formé rejeté | `Erreur : le hash fourni est invalide. Il doit s'agir d'une chaîne hexadécimale de 32 caractères.`  |
 
-**Observation** : la stratégie `DICO` est nettement plus rapide (83 ms) que `BRUTE`
-(2457 à 3135 ms) sur ces exemples, ce qui illustre concrètement le compromis entre les
-deux approches : le dictionnaire est rapide mais limité aux mots qu'il contient, tandis
-que la force brute est exhaustive mais coûteuse en temps, même sur un alphabet réduit
-(a-z) et une longueur maximale de seulement 4 caractères.
+**Observation** : la stratégie `DICO` est nettement plus rapide (36 à 83 ms) que
+`BRUTE` (2204 à 3135 ms) sur ces exemples, ce qui illustre concrètement le compromis
+entre les deux approches : le dictionnaire est rapide, qu'il trouve le mot ou non,
+puisqu'il ne fait que parcourir une liste finie ; la force brute, elle, est exhaustive
+mais coûteuse en temps, même sur un alphabet réduit (a-z) et une longueur maximale de
+seulement 4 caractères — et ce coût reste élevé même dans les cas d'échec (`Password
+not found`), car toutes les combinaisons doivent être épuisées avant de conclure.
 
 ## 7. Difficultés rencontrées
 
