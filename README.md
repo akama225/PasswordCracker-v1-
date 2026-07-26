@@ -123,9 +123,10 @@ Password not found
 L'application a été testée avec succès sur les deux stratégies de cassage, ainsi que
 sur plusieurs cas d'erreur (méthode invalide, hash mal formé, mot de passe introuvable).
 
-![Résultats des tests en ligne de commande](test-results.png)
+![Résultats des tests en ligne de commande](<img width="576" height="281" alt="test_results" src="https://github.com/user-attachments/assets/76eea810-54dd-4060-9b25-bf953ca25e6b" />
+)
 
-**Vidéo de démonstration** : *(lien à insérer ici une fois la vidéo enregistrée)*
+**Vidéo de démonstration** : https://drive.google.com/file/d/1UJiRQV8gBH2MXXbdsMwEafwpUt1rlp5u/view?usp=drive_link
 
 | Méthode | Hash testé | Mot recherché | Résultat | Temps d'exécution | Tentatives |
 |---------|-----------|----------------|----------|--------------------|------------|
